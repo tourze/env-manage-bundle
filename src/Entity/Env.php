@@ -4,7 +4,6 @@ namespace Tourze\EnvManageBundle\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
@@ -43,7 +42,6 @@ class Env implements ApiArrayInterface, AdminArrayInterface
 {
     #[ExportColumn]
     #[ListColumn(order: -1, sorter: true)]
-    #[Groups(['restful_read', 'admin_curd', 'recursive_view', 'api_tree'])]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
@@ -56,7 +54,6 @@ class Env implements ApiArrayInterface, AdminArrayInterface
     #[Keyword]
     #[ListColumn]
     #[CopyColumn(suffix: '_copy')]
-    #[Groups(['restful_read', 'restful_write'])]
     #[ORM\Column(type: Types::STRING, length: 100, unique: true, options: ['comment' => '名称'])]
     private string $name;
 
@@ -65,7 +62,6 @@ class Env implements ApiArrayInterface, AdminArrayInterface
     #[Keyword]
     #[ListColumn(width: 400)]
     #[CopyColumn]
-    #[Groups(['restful_read', 'restful_write'])]
     #[ORM\Column(type: Types::TEXT, options: ['comment' => '参数'])]
     private ?string $value = null;
 
@@ -74,7 +70,6 @@ class Env implements ApiArrayInterface, AdminArrayInterface
     #[Keyword]
     #[ListColumn]
     #[CopyColumn]
-    #[Groups(['restful_read', 'restful_write'])]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['comment' => '备注'])]
     private ?string $remark = null;
 
@@ -82,26 +77,22 @@ class Env implements ApiArrayInterface, AdminArrayInterface
     #[TrackColumn]
     #[ListColumn]
     #[FormField]
-    #[Groups(['restful_read', 'restful_write'])]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['default' => 0, 'comment' => '是否同步'])]
     private ?bool $sync = false;
 
     #[BoolColumn]
     #[IndexColumn]
     #[TrackColumn]
-    #[Groups(['admin_curd', 'restful_read', 'restful_read', 'restful_write'])]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
     #[ListColumn(order: 97)]
     #[FormField(order: 97)]
     private ?bool $valid = false;
 
     #[CreatedByColumn]
-    #[Groups(['restful_read'])]
     #[ORM\Column(nullable: true, options: ['comment' => '创建人'])]
     private ?string $createdBy = null;
 
     #[UpdatedByColumn]
-    #[Groups(['restful_read'])]
     #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
     private ?string $updatedBy = null;
 
@@ -118,13 +109,11 @@ class Env implements ApiArrayInterface, AdminArrayInterface
     #[ListColumn(order: 98, sorter: true)]
     #[ExportColumn]
     #[CreateTimeColumn]
-    #[Groups(['restful_read', 'admin_curd', 'restful_read'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]
     private ?\DateTimeInterface $createTime = null;
 
     #[UpdateTimeColumn]
     #[ListColumn(order: 99, sorter: true)]
-    #[Groups(['restful_read', 'admin_curd', 'restful_read'])]
     #[Filterable]
     #[ExportColumn]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '更新时间'])]
