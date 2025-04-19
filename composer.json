@@ -39,5 +39,10 @@
     "psr-4": {
       "Tourze\\EnvManageBundle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tourze\\EnvManageBundle\\Tests\\": "tests"
+    }
   }
 }
