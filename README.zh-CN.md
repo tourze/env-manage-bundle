@@ -23,6 +23,7 @@
 ## 安装说明
 
 ### 环境要求
+
 - PHP >= 8.1
 - Symfony >= 6.4
 - Doctrine ORM >= 2.20
@@ -34,6 +35,7 @@ composer require tourze/env-manage-bundle
 ```
 
 ### 启用组件
+
 通常由 Symfony Flex 自动注册。如需手动添加到 `config/bundles.php`：
 
 ```php
