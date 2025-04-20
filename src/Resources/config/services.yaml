@@ -8,3 +8,5 @@ services:
     resource: '../../EventSubscriber/'
   Tourze\EnvManageBundle\Repository\:
     resource: '../../Repository/'
+  Tourze\EnvManageBundle\Service\:
+    resource: '../../Service/'
