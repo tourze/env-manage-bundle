@@ -10,3 +10,5 @@ services:
     resource: '../../Repository/'
   Tourze\EnvManageBundle\Service\:
     resource: '../../Service/'
+  Tourze\EnvManageBundle\Twig\:
+    resource: '../../Twig/'
