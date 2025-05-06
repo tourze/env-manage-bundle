@@ -27,7 +27,7 @@
     "tourze/doctrine-indexed-bundle": "0.0.*",
     "tourze/doctrine-ip-bundle": "0.0.*",
     "tourze/doctrine-timestamp-bundle": "0.0.*",
-    "tourze/doctrine-snowflake-bundle": "0.0.*",
+    "tourze/doctrine-snowflake-bundle": "0.1.*",
     "psr/log": "^3|^2|^1",
     "twig/twig": "^3.13|^4.0"
   },
