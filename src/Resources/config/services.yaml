@@ -6,6 +6,8 @@ services:
 
   Tourze\EnvManageBundle\EventSubscriber\:
     resource: '../../EventSubscriber/'
+  Tourze\EnvManageBundle\Procedure\:
+    resource: '../../Procedure/'
   Tourze\EnvManageBundle\Repository\:
     resource: '../../Repository/'
   Tourze\EnvManageBundle\Service\:

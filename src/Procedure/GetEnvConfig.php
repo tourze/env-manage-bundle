@@ -1,0 +1,43 @@
+<?php
+
+namespace Tourze\EnvManageBundle\Procedure;
+
+use Tourze\DoctrineHelper\CacheHelper;
+use Tourze\EnvManageBundle\Entity\Env;
+use Tourze\EnvManageBundle\Service\EnvService;
+use Tourze\JsonRPC\Core\Attribute\MethodDoc;
+use Tourze\JsonRPC\Core\Attribute\MethodExpose;
+use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Model\JsonRpcRequest;
+use Tourze\JsonRPCCacheBundle\Procedure\CacheableProcedure;
+
+#[MethodTag('基础能力')]
+#[MethodDoc('返回配置')]
+#[MethodExpose('GetEnvConfig')]
+class GetEnvConfig extends CacheableProcedure
+{
+    public function __construct(
+        private readonly EnvService $envService,
+    ) {
+    }
+
+    public function execute(): array
+    {
+        return $this->envService->fetchPublicArray();
+    }
+
+    protected function getCacheKey(JsonRpcRequest $request): string
+    {
+        return 'GetEnvConfig_cache';
+    }
+
+    protected function getCacheDuration(JsonRpcRequest $request): int
+    {
+        return 60 * 60 * 24;
+    }
+
+    protected function getCacheTags(JsonRpcRequest $request): iterable
+    {
+        yield CacheHelper::getClassTags(Env::class);
+    }
+}
