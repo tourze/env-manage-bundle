@@ -10,6 +10,7 @@
     "doctrine/orm": "^3.0",
     "doctrine/persistence": "^3.1 || ^4",
     "easycorp/easyadmin-bundle": "^4",
+    "knplabs/knp-menu": "^3.7",
     "psr/log": "^3|^2|^1",
     "symfony/cache": "^6.4",
     "symfony/cache-contracts": "^3",
@@ -34,7 +35,7 @@
     "tourze/doctrine-timestamp-bundle": "0.0.*",
     "tourze/doctrine-track-bundle": "0.1.*",
     "tourze/doctrine-user-bundle": "0.0.*",
-    "tourze/easy-admin-attribute": "0.1.*",
+    "tourze/easy-admin-menu-bundle": "0.1.*",
     "tourze/json-rpc-cache-bundle": "0.1.*",
     "tourze/json-rpc-core": "0.0.*",
     "twig/twig": "^3.13|^4.0"

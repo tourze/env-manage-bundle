@@ -4,6 +4,7 @@ namespace Tourze\EnvManageBundle\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminAction;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminCrud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -25,6 +26,7 @@ use Tourze\EnvManageBundle\Entity\Env;
 /**
  * 环境变量管理控制器
  */
+#[AdminCrud(routePath: '/env-manage/env', routeName: 'env_manage_env')]
 class EnvCrudController extends AbstractCrudController
 {
     public function __construct(
@@ -91,10 +93,7 @@ class EnvCrudController extends AbstractCrudController
             ->setRequired(true)
             ->setHelp('变量的值，会被加载到系统环境变量中')
             ->formatValue(function ($value) {
-                if (strlen($value) > 100) {
-                    return substr($value, 0, 100) . '...';
-                }
-                return $value;
+                return $this->formatValueDisplay($value);
             });
 
         yield TextField::new('remark', '备注')
@@ -152,6 +151,8 @@ class EnvCrudController extends AbstractCrudController
     public function copyEnv(AdminContext $context): Response
     {
         $env = $context->getEntity()->getInstance();
+        assert($env instanceof Env);
+        
         $newEnv = new Env();
         $newEnv->setName($env->getName() . '_copy');
         $newEnv->setValue($env->getValue());
@@ -162,12 +163,28 @@ class EnvCrudController extends AbstractCrudController
         $this->entityManager->persist($newEnv);
         $this->entityManager->flush();
 
-        $this->addFlash('success', '环境变量复制成功');
+        $this->addFlash('success', sprintf('环境变量 %s 复制成功', $env->getName()));
 
         return $this->redirect($this->urlGenerator->generate('admin', [
             'crudAction' => 'edit',
             'crudControllerFqcn' => self::class,
             'entityId' => $newEnv->getId(),
         ]));
+    }
+
+    /**
+     * 格式化值显示
+     */
+    private function formatValueDisplay(?string $value): string
+    {
+        if (null === $value) {
+            return '';
+        }
+        
+        if (strlen($value) > 100) {
+            return substr($value, 0, 100) . '...';
+        }
+        
+        return $value;
     }
 }
