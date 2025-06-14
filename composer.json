@@ -38,6 +38,7 @@
     "tourze/easy-admin-menu-bundle": "0.1.*",
     "tourze/json-rpc-cache-bundle": "0.1.*",
     "tourze/json-rpc-core": "0.0.*",
+    "tourze/symfony-integration-test-kernel": "0.0.*",
     "twig/twig": "^3.13|^4.0"
   },
   "require-dev": {
