@@ -64,7 +64,7 @@ class EnvTest extends TestCase
     public function testTrackableFields_settersAndGetters(): void
     {
         $env = new Env();
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         
         $env->setCreatedBy('test_user');
         $env->setUpdatedBy('test_admin');
