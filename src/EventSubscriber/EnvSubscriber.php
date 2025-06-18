@@ -121,7 +121,7 @@ class EnvSubscriber implements EventSubscriberInterface
         try {
             $dbEnv = [];
             foreach ($this->envRepository->findBy(['valid' => true]) as $env) {
-                foreach (static::$badEnvKeys as $badEnvKey) {
+                foreach (self::$badEnvKeys as $badEnvKey) {
                     if (str_starts_with((string) $env->getName(), $badEnvKey)) {
                         continue 2;
                     }

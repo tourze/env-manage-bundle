@@ -156,7 +156,7 @@ class EnvCrudController extends AbstractCrudController
         $newEnv = new Env();
         $newEnv->setName($env->getName() . '_copy');
         $newEnv->setValue($env->getValue());
-        $newEnv->setRemark($env->getRemark() ? $env->getRemark() . ' (复制)' : '');
+        $newEnv->setRemark($env->getRemark() !== null ? $env->getRemark() . ' (复制)' : '');
         $newEnv->setSync(false);
         $newEnv->setValid(false);
 

@@ -31,7 +31,6 @@ class EnvServiceTest extends TestCase
 
         $result = $this->envService->fetchPublicArray();
 
-        $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
 
@@ -56,7 +55,6 @@ class EnvServiceTest extends TestCase
 
         $result = $this->envService->fetchPublicArray();
 
-        $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertArrayHasKey('name', $result[0]);
         $this->assertArrayHasKey('value', $result[0]);
