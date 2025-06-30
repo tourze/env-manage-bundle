@@ -9,7 +9,7 @@ use Tourze\Arrayable\ApiArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
 use Tourze\DoctrineIpBundle\Attribute\UpdateIpColumn;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
@@ -19,13 +19,9 @@ use Tourze\EnvManageBundle\Repository\EnvRepository;
 #[ORM\Table(name: 'base_env', options: ['comment' => 'env配置相关'])]
 class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
 {
+    use SnowflakeKeyAware;
     use TimestampableAware;
     use BlameableAware;
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
 
     #[TrackColumn]
     #[IndexColumn]
@@ -57,11 +53,6 @@ class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
     #[UpdateIpColumn]
     #[ORM\Column(length: 128, nullable: true, options: ['comment' => '更新时IP'])]
     private ?string $updatedFromIp = null;
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
 
     public function __toString(): string
     {

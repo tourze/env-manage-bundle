@@ -32,8 +32,7 @@ class EnvCrudController extends AbstractCrudController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
+    ) {}
 
     public static function getEntityFqcn(): string
     {
@@ -47,8 +46,8 @@ class EnvCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('环境变量列表')
             ->setPageTitle('index', '环境变量管理')
             ->setPageTitle('new', '新增环境变量')
-            ->setPageTitle('edit', fn (Env $env) => sprintf('编辑环境变量: %s', $env->getName()))
-            ->setPageTitle('detail', fn (Env $env) => sprintf('环境变量详情: %s', $env->getName()))
+            ->setPageTitle('edit', fn(Env $env) => sprintf('编辑环境变量: %s', $env->getName()))
+            ->setPageTitle('detail', fn(Env $env) => sprintf('环境变量详情: %s', $env->getName()))
             ->setDefaultSort(['createTime' => 'DESC'])
             ->setSearchFields(['id', 'name', 'value', 'remark'])
             ->setHelp('index', '管理系统中的环境变量，有效且同步的环境变量将被加载到系统中');
@@ -147,12 +146,12 @@ class EnvCrudController extends AbstractCrudController
     /**
      * 复制环境变量
      */
-    #[AdminAction('{entityId}/copy', 'copy_env')]
+    #[AdminAction(routePath: '{entityId}/copy', routeName: 'copy_env')]
     public function copyEnv(AdminContext $context): Response
     {
         $env = $context->getEntity()->getInstance();
         assert($env instanceof Env);
-        
+
         $newEnv = new Env();
         $newEnv->setName($env->getName() . '_copy');
         $newEnv->setValue($env->getValue());
@@ -180,11 +179,11 @@ class EnvCrudController extends AbstractCrudController
         if (null === $value) {
             return '';
         }
-        
+
         if (strlen($value) > 100) {
             return substr($value, 0, 100) . '...';
         }
-        
+
         return $value;
     }
 }

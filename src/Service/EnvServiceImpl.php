@@ -5,7 +5,7 @@ namespace Tourze\EnvManageBundle\Service;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Tourze\EnvManageBundle\Repository\EnvRepository;
 
-#[AsAlias(EnvService::class)]
+#[AsAlias(id: EnvService::class)]
 class EnvServiceImpl implements EnvService
 {
     public function __construct(private readonly EnvRepository $envRepository)

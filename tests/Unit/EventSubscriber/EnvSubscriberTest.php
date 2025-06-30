@@ -109,24 +109,15 @@ class EnvSubscriberTest extends TestCase
         
         $event = new ConsoleCommandEvent($command, $input, $output);
         
-        // 使用间谍对象来验证loadDbEnv未被调用
-        $subscriber = $this->getMockBuilder(EnvSubscriber::class)
-            ->setConstructorArgs([
-                $this->logger,
-                $this->envRepository,
-                $this->entityManager,
-                $this->cache
-            ])
-            ->onlyMethods(['loadDbEnv'])
-            ->getMock();
+        // 确保 envRepository 不会被调用
+        $this->envRepository->expects($this->never())
+            ->method('findBy');
             
-        $subscriber->expects($this->never())
-            ->method('loadDbEnv');
-            
-        $subscriber->onCommand($event);
+        // 执行测试
+        $this->subscriber->onCommand($event);
         
-        // 添加断言来解决risky警告
-        $this->assertInstanceOf(EnvSubscriber::class, $subscriber);
+        // 验证缓存没有被更新
+        $this->assertFalse($this->cache->hasItem(EnvSubscriber::CACHE_KEY));
     }
     
     public function testRemoveCache_deletesCache(): void

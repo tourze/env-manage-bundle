@@ -11,9 +11,9 @@ use Tourze\JsonRPC\Core\Attribute\MethodTag;
 use Tourze\JsonRPC\Core\Model\JsonRpcRequest;
 use Tourze\JsonRPCCacheBundle\Procedure\CacheableProcedure;
 
-#[MethodTag('基础能力')]
-#[MethodDoc('返回配置')]
-#[MethodExpose('GetEnvConfig')]
+#[MethodTag(name: '基础能力')]
+#[MethodDoc(summary: '返回配置')]
+#[MethodExpose(method: 'GetEnvConfig')]
 class GetEnvConfig extends CacheableProcedure
 {
     public function __construct(
