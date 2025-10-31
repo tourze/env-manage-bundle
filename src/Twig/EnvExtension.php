@@ -12,8 +12,7 @@
 namespace Tourze\EnvManageBundle\Twig;
 
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\Attribute\AsTwigFunction;
 
 /**
  * See https://symfony.com/doc/current/templating/twig_extension.html.
@@ -23,19 +22,13 @@ use Twig\TwigFunction;
  * @author Julien ITARD <julienitard@gmail.com>
  */
 #[Autoconfigure(lazy: true)]
-class EnvExtension extends AbstractExtension
+class EnvExtension
 {
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('env', $this->getEnv(...)),
-            new TwigFunction('setting', $this->getEnv(...)),
-        ];
-    }
-
     /**
      * 加载环境变量
      */
+    #[AsTwigFunction(name: 'env')]
+    #[AsTwigFunction(name: 'setting')]
     public function getEnv(string $name, mixed $defaultValue = null): mixed
     {
         return $_ENV[$name] ?? $defaultValue;

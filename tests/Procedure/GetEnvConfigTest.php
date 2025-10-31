@@ -1,57 +1,73 @@
 <?php
 
-namespace Tourze\Tests\Procedure;
+namespace Tourze\EnvManageBundle\Tests\Procedure;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\EnvManageBundle\Entity\Env;
 use Tourze\EnvManageBundle\Procedure\GetEnvConfig;
-use Tourze\EnvManageBundle\Service\EnvService;
 use Tourze\JsonRPC\Core\Model\JsonRpcRequest;
+use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
 
-class GetEnvConfigTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(GetEnvConfig::class)]
+#[RunTestsInSeparateProcesses]
+final class GetEnvConfigTest extends AbstractProcedureTestCase
 {
-    /**
-     * @var EnvService&MockObject
-     */
-    private EnvService $envService;
-    private GetEnvConfig $procedure;
-
-    protected function setUp(): void
+    protected function onSetUp(): void        // 手动清理数据库，确保表被创建
     {
-        $this->envService = $this->createMock(EnvService::class);
-        $this->procedure = new GetEnvConfig($this->envService);
+        self::cleanDatabase();
     }
 
-    public function testExecute_returnsEnvServiceData(): void
+    protected function createProcedure(): GetEnvConfig
     {
-        $expectedData = [
-            ['name' => 'TEST_VAR1', 'value' => 'value1'],
-            ['name' => 'TEST_VAR2', 'value' => 'value2'],
-        ];
-
-        $this->envService->expects($this->once())
-            ->method('fetchPublicArray')
-            ->willReturn($expectedData);
-
-        $result = $this->procedure->execute();
-
-        $this->assertSame($expectedData, $result);
+        return self::getService(GetEnvConfig::class);
     }
 
-    public function testGetCacheKey_returnsExpectedKey(): void
+    public function testExecuteReturnsEnvServiceData(): void
     {
-        $request = $this->createMock(JsonRpcRequest::class);
+        // 创建测试环境变量数据
+        $env1 = new Env();
+        $env1->setName('TEST_PROCEDURE_ENV1');
+        $env1->setValue('procedure_value1');
+        $env1->setValid(true);
+        $env1->setSync(true);
 
-        $cacheKey = $this->procedure->getCacheKey($request);
+        $env2 = new Env();
+        $env2->setName('TEST_PROCEDURE_ENV2');
+        $env2->setValue('procedure_value2');
+        $env2->setValid(true);
+        $env2->setSync(true);
+
+        // 保存到数据库
+        $this->persistAndFlush($env1);
+        $this->persistAndFlush($env2);
+
+        $procedure = $this->createProcedure();
+        $result = $procedure->execute();
+
+        /** @phpstan-ignore method.alreadyNarrowedType */
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('envs', $result);
+        $this->assertIsArray($result['envs']);
+    }
+
+    public function testGetCacheKeyReturnsExpectedKey(): void
+    {
+        $procedure = $this->createProcedure();
+        $request = new JsonRpcRequest();
+        $cacheKey = $procedure->getCacheKey($request);
 
         $this->assertSame('GetEnvConfig_cache', $cacheKey);
     }
 
-    public function testGetCacheDuration_returns24Hours(): void
+    public function testGetCacheDurationReturns24Hours(): void
     {
-        $request = $this->createMock(JsonRpcRequest::class);
-
-        $duration = $this->procedure->getCacheDuration($request);
+        $procedure = $this->createProcedure();
+        $request = new JsonRpcRequest();
+        $duration = $procedure->getCacheDuration($request);
 
         $this->assertSame(60 * 60 * 24, $duration);
     }

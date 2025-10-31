@@ -9,6 +9,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Console\Command\RunDqlCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
+use Monolog\Attribute\WithMonologChannel;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
 use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
@@ -30,13 +31,17 @@ use Tourze\EnvManageBundle\Repository\EnvRepository;
  * @see https://symfony.com/doc/current/messenger.html
  * @see https://symfony.com/doc/current/reference/events.html
  */
+#[WithMonologChannel(channel: 'env_manage')]
 #[AsEntityListener(event: Events::postPersist, method: 'removeCache', entity: Env::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'removeCache', entity: Env::class)]
 #[AsEntityListener(event: Events::postRemove, method: 'removeCache', entity: Env::class)]
-class EnvSubscriber implements EventSubscriberInterface
+final class EnvEventSubscriber implements EventSubscriberInterface
 {
     public const CACHE_KEY = 'custom-env';
 
+    /**
+     * @var array<string>
+     */
     private static array $badEnvKeys = [
         'LD_PRELOAD', // 参考 https://www.leavesongs.com/PENETRATION/how-I-hack-bash-through-environment-injection.html 不是所有环境变量都是安全的
         'APP_',
@@ -47,6 +52,9 @@ class EnvSubscriber implements EventSubscriberInterface
         'LOCK_',
     ];
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $originEnv;
 
     public function __construct(
@@ -116,6 +124,9 @@ class EnvSubscriber implements EventSubscriberInterface
         unset($dotenv);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function loadCache(ItemInterface $item): array
     {
         try {
@@ -147,7 +158,7 @@ class EnvSubscriber implements EventSubscriberInterface
     {
         try {
             $this->cache->delete('GetEnvConfig_cache');
-            $this->cache->delete(EnvSubscriber::CACHE_KEY);
+            $this->cache->delete(EnvEventSubscriber::CACHE_KEY);
         } catch (\Throwable $exception) {
             $this->logger->error('清理ENV环境失败1', [
                 'exception' => $exception,

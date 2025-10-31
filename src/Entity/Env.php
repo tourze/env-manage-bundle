@@ -4,11 +4,9 @@ namespace Tourze\EnvManageBundle\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Tourze\Arrayable\AdminArrayInterface;
-use Tourze\Arrayable\ApiArrayInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
-use Tourze\DoctrineIpBundle\Attribute\CreateIpColumn;
-use Tourze\DoctrineIpBundle\Attribute\UpdateIpColumn;
+use Tourze\DoctrineIpBundle\Traits\IpTraceableAware;
 use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
@@ -17,59 +15,55 @@ use Tourze\EnvManageBundle\Repository\EnvRepository;
 
 #[ORM\Entity(repositoryClass: EnvRepository::class)]
 #[ORM\Table(name: 'base_env', options: ['comment' => 'env配置相关'])]
-class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
+class Env implements \Stringable
 {
     use SnowflakeKeyAware;
     use TimestampableAware;
     use BlameableAware;
+    use IpTraceableAware;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
     #[TrackColumn]
     #[IndexColumn]
     #[ORM\Column(type: Types::STRING, length: 100, unique: true, options: ['comment' => '名称'])]
     private string $name;
 
+    #[Assert\NotNull]
+    #[Assert\Length(max: 65535)]
     #[TrackColumn]
     #[ORM\Column(type: Types::TEXT, options: ['comment' => '参数'])]
     private ?string $value = null;
 
+    #[Assert\Length(max: 255)]
     #[TrackColumn]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['comment' => '备注'])]
     private ?string $remark = null;
 
+    #[Assert\Type(type: 'bool')]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['default' => 0, 'comment' => '是否同步'])]
     private ?bool $sync = false;
 
+    #[Assert\Type(type: 'bool')]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
     private ?bool $valid = false;
-
-
-    #[CreateIpColumn]
-    #[ORM\Column(length: 128, nullable: true, options: ['comment' => '创建时IP'])]
-    private ?string $createdFromIp = null;
-
-    #[UpdateIpColumn]
-    #[ORM\Column(length: 128, nullable: true, options: ['comment' => '更新时IP'])]
-    private ?string $updatedFromIp = null;
 
     public function __toString(): string
     {
         return $this->name ?? '';
     }
 
-
     public function isValid(): ?bool
     {
         return $this->valid;
     }
 
-    public function setValid(?bool $valid): self
+    public function setValid(?bool $valid): void
     {
         $this->valid = $valid;
-
-        return $this;
     }
 
     public function getName(): string
@@ -77,11 +71,9 @@ class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getValue(): ?string
@@ -89,11 +81,9 @@ class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
         return $this->value;
     }
 
-    public function setValue(string $value): self
+    public function setValue(string $value): void
     {
         $this->value = $value;
-
-        return $this;
     }
 
     public function getRemark(): ?string
@@ -101,11 +91,9 @@ class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
         return $this->remark;
     }
 
-    public function setRemark(?string $remark): self
+    public function setRemark(?string $remark): void
     {
         $this->remark = $remark;
-
-        return $this;
     }
 
     public function isSync(): ?bool
@@ -113,57 +101,34 @@ class Env implements ApiArrayInterface, AdminArrayInterface, \Stringable
         return $this->sync;
     }
 
-    public function setSync(?bool $sync): self
+    public function setSync(?bool $sync): void
     {
         $this->sync = $sync;
-
-        return $this;
     }
 
-    public function getCreatedFromIp(): ?string
-    {
-        return $this->createdFromIp;
-    }
-
-    public function setCreatedFromIp(?string $createdFromIp): static
-    {
-        $this->createdFromIp = $createdFromIp;
-
-        return $this;
-    }
-
-    public function getUpdatedFromIp(): ?string
-    {
-        return $this->updatedFromIp;
-    }
-
-    public function setUpdatedFromIp(?string $updatedFromIp): static
-    {
-        $this->updatedFromIp = $updatedFromIp;
-
-        return $this;
-    }public function retrieveApiArray(): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function retrieveApiArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'value' => $this->getValue(),
+            'name' => $this->name,
+            'value' => $this->value,
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function retrieveAdminArray(): array
     {
         return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'value' => $this->getValue(),
-            'remark' => $this->getRemark(),
-            'isSync' => $this->isSync(),
-            'sync' => $this->isSync(),
-            'isValid' => $this->isValid(),
-            'valid' => $this->isValid(),
-            'createTime' => $this->getCreateTime()?->format('Y-m-d H:i:s'),
-            'updateTime' => $this->getUpdateTime()?->format('Y-m-d H:i:s'),
+            'id' => $this->id,
+            'name' => $this->name,
+            'value' => $this->value,
+            'remark' => $this->remark,
+            'sync' => $this->sync,
+            'valid' => $this->valid,
         ];
     }
 }

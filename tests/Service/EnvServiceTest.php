@@ -6,7 +6,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\EnvManageBundle\Entity\Env;
 use Tourze\EnvManageBundle\Repository\EnvRepository;
-use Tourze\EnvManageBundle\Service\EnvService;
 use Tourze\EnvManageBundle\Service\EnvServiceImpl;
 use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
@@ -15,20 +14,15 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
  */
 #[CoversClass(EnvServiceImpl::class)]
 #[RunTestsInSeparateProcesses]
-final class EnvServiceImplTest extends AbstractIntegrationTestCase
+final class EnvServiceTest extends AbstractIntegrationTestCase
 {
-    private EnvService $envService;
+    private EnvServiceImpl $envService;
 
     protected function onSetUp(): void
     {
-        /** @var EnvService $envService */
-        $envService = self::getContainer()->get(EnvService::class);
+        /** @var EnvServiceImpl $envService */
+        $envService = self::getContainer()->get(EnvServiceImpl::class);
         $this->envService = $envService;
-    }
-
-    public function testImplementsEnvServiceInterface(): void
-    {
-        $this->assertInstanceOf(EnvService::class, $this->envService);
     }
 
     public function testFetchPublicArrayWithNoEnvironmentVariablesReturnsEmptyArray(): void

@@ -1,13 +1,47 @@
 <?php
 
-namespace Tourze\Tests\Entity;
+namespace Tourze\EnvManageBundle\Tests\Entity;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tourze\EnvManageBundle\Entity\Env;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 
-class EnvTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(Env::class)]
+final class EnvTest extends AbstractEntityTestCase
 {
-    public function testCreateEnv_withValidData(): void
+    /**
+     * 创建被测实体的新实例。
+     */
+    protected function createEntity(): Env
+    {
+        return new Env();
+    }
+
+    /**
+     * 提供属性名称和示例值，用于自动测试 getter 和 setter 方法。
+     *
+     * @return iterable<string, array{string, mixed}>
+     */
+    public static function propertiesProvider(): iterable
+    {
+        yield 'name' => ['name', 'TEST_VAR'];
+        yield 'value' => ['value', 'test_value'];
+        yield 'remark' => ['remark', '测试备注'];
+        yield 'sync' => ['sync', true];
+        yield 'valid' => ['valid', false];
+        yield 'createdBy' => ['createdBy', 'test_user'];
+        yield 'updatedBy' => ['updatedBy', 'test_admin'];
+        yield 'createdFromIp' => ['createdFromIp', '127.0.0.1'];
+        yield 'updatedFromIp' => ['updatedFromIp', '192.168.1.1'];
+        yield 'createTime' => ['createTime', new \DateTimeImmutable()];
+        yield 'updateTime' => ['updateTime', new \DateTimeImmutable()];
+    }
+
+    public function testCreateEnvWithValidData(): void
     {
         $env = new Env();
         $env->setName('TEST_VAR');
@@ -23,7 +57,7 @@ class EnvTest extends TestCase
         $this->assertTrue($env->isValid());
     }
 
-    public function testRetrieveApiArray_containsExpectedKeys(): void
+    public function testRetrieveApiArrayContainsExpectedKeys(): void
     {
         $env = new Env();
         $env->setName('TEST_VAR');
@@ -37,7 +71,7 @@ class EnvTest extends TestCase
         $this->assertSame('test_value', $array['value']);
     }
 
-    public function testRetrieveAdminArray_containsExpectedKeys(): void
+    public function testRetrieveAdminArrayContainsExpectedKeys(): void
     {
         $env = new Env();
         $env->setName('TEST_VAR');
@@ -61,7 +95,7 @@ class EnvTest extends TestCase
         $this->assertTrue($array['valid']);
     }
 
-    public function testTrackableFields_settersAndGetters(): void
+    public function testTrackableFieldsSettersAndGetters(): void
     {
         $env = new Env();
         $now = new \DateTimeImmutable();

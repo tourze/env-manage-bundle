@@ -1,16 +1,22 @@
 <?php
 
-namespace Tourze\Tests\DependencyInjection;
+namespace Tourze\EnvManageBundle\Tests\DependencyInjection;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tourze\EnvManageBundle\DependencyInjection\EnvManageExtension;
+use Tourze\PHPUnitSymfonyUnitTest\AbstractDependencyInjectionExtensionTestCase;
 
-class EnvManageExtensionTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(EnvManageExtension::class)]
+final class EnvManageExtensionTest extends AbstractDependencyInjectionExtensionTestCase
 {
-    public function testLoad_loadsServicesConfiguration(): void
+    public function testLoadLoadsServicesConfiguration(): void
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
         $extension = new EnvManageExtension();
 
         $extension->load([], $container);
@@ -20,9 +26,10 @@ class EnvManageExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition('Tourze\EnvManageBundle\Twig\EnvExtension'));
     }
 
-    public function testLoad_withEmptyConfigs_doesNotThrowException(): void
+    public function testLoadWithEmptyConfigsDoesNotThrowException(): void
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
         $extension = new EnvManageExtension();
 
         $this->expectNotToPerformAssertions();

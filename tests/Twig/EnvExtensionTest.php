@@ -1,36 +1,34 @@
 <?php
 
-namespace Tourze\Tests\Twig;
+namespace Tourze\EnvManageBundle\Tests\Twig;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\EnvManageBundle\Twig\EnvExtension;
-use Twig\TwigFunction;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
-class EnvExtensionTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(EnvExtension::class)]
+#[RunTestsInSeparateProcesses]
+final class EnvExtensionTest extends AbstractIntegrationTestCase
 {
     private EnvExtension $extension;
 
-    protected function setUp(): void
+    protected function onSetUp(): void
     {
-        $this->extension = new EnvExtension();
+        /** @var EnvExtension $extension */
+        $extension = self::getContainer()->get(EnvExtension::class);
+        $this->extension = $extension;
     }
 
-    public function testGetFunctions_returnsExpectedFunctions(): void
+    public function testExtensionInstanceCreation(): void
     {
-        $functions = $this->extension->getFunctions();
-
-        $this->assertCount(2, $functions);
-
-        $envFunction = $functions[0];
-        $this->assertInstanceOf(TwigFunction::class, $envFunction);
-        $this->assertSame('env', $envFunction->getName());
-
-        $settingFunction = $functions[1];
-        $this->assertInstanceOf(TwigFunction::class, $settingFunction);
-        $this->assertSame('setting', $settingFunction->getName());
+        $this->assertInstanceOf(EnvExtension::class, $this->extension);
     }
 
-    public function testGetEnv_withExistingVariable_returnsValue(): void
+    public function testGetEnvWithExistingVariableReturnsValue(): void
     {
         $_ENV['TEST_VAR'] = 'test_value';
 
@@ -41,21 +39,21 @@ class EnvExtensionTest extends TestCase
         unset($_ENV['TEST_VAR']);
     }
 
-    public function testGetEnv_withNonExistingVariable_returnsDefaultValue(): void
+    public function testGetEnvWithNonExistingVariableReturnsDefaultValue(): void
     {
         $result = $this->extension->getEnv('NON_EXISTING_VAR', 'default_value');
 
         $this->assertSame('default_value', $result);
     }
 
-    public function testGetEnv_withNonExistingVariableAndNoDefault_returnsNull(): void
+    public function testGetEnvWithNonExistingVariableAndNoDefaultReturnsNull(): void
     {
         $result = $this->extension->getEnv('NON_EXISTING_VAR');
 
         $this->assertNull($result);
     }
 
-    public function testGetEnv_withVariousDataTypes_returnsCorrectTypes(): void
+    public function testGetEnvWithVariousDataTypesReturnsCorrectTypes(): void
     {
         $_ENV['TEST_STRING'] = 'string_value';
         $_ENV['TEST_INT'] = '123';

@@ -14,16 +14,19 @@ use Tourze\JsonRPCCacheBundle\Procedure\CacheableProcedure;
 #[MethodTag(name: '基础能力')]
 #[MethodDoc(summary: '返回配置')]
 #[MethodExpose(method: 'GetEnvConfig')]
-class GetEnvConfig extends CacheableProcedure
+final class GetEnvConfig extends CacheableProcedure
 {
     public function __construct(
         private readonly EnvService $envService,
     ) {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function execute(): array
     {
-        return $this->envService->fetchPublicArray();
+        return ['envs' => $this->envService->fetchPublicArray()];
     }
 
     public function getCacheKey(JsonRpcRequest $request): string
@@ -36,6 +39,9 @@ class GetEnvConfig extends CacheableProcedure
         return 60 * 60 * 24;
     }
 
+    /**
+     * @return iterable<string>
+     */
     public function getCacheTags(JsonRpcRequest $request): iterable
     {
         yield CacheHelper::getClassTags(Env::class);
