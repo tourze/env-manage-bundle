@@ -87,8 +87,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testIndexPage(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建测试数据
         $env1 = $this->createTestEnv('DATABASE_URL_' . uniqid(), 'mysql://root:password@localhost/test');
@@ -112,8 +111,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testCreateEnv(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 简化测试：只验证能够成功访问新建页面和数据库功能
         $crawler = $client->request('GET', '/admin/env-manage/env/new');
@@ -151,8 +149,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testEditEnv(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建测试数据
         $env = $this->createTestEnv('EDIT_TEST_ENV_' . uniqid(), 'original_value');
@@ -191,8 +188,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeleteEnv(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建测试数据
         $env = $this->createTestEnv('DELETE_TEST_ENV_' . uniqid(), 'to_be_deleted');
@@ -223,8 +219,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDetailView(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建测试数据
         $env = $this->createTestEnv('DETAIL_TEST_ENV_' . uniqid(), 'detail_value');
@@ -247,8 +242,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testCopyEnv(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建原始数据
         $originalEnv = $this->createTestEnv('ORIGINAL_ENV_' . uniqid(), 'original_value');
@@ -284,8 +278,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testSearchAndFilter(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 创建测试数据
         $env1 = $this->createTestEnv('PROD_DATABASE_URL_' . uniqid(), 'prod_value');
@@ -307,8 +300,7 @@ final class EnvCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testValidationErrors(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 访问新建页面
         $crawler = $client->request('GET', '/admin/env-manage/env/new');
