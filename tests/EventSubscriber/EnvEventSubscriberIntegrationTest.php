@@ -64,7 +64,6 @@ final class EnvEventSubscriberIntegrationTest extends AbstractEventSubscriberTes
 
         $subscriber = $this->createEventSubscriber();
         $result = $subscriber->loadCache($item);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($result);
     }
 

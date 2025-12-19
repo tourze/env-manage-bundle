@@ -109,7 +109,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
     public function testFindByWithNullCriteria(): void
     {
         $entities = $this->repository->findBy(['valid' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($entities);
         foreach ($entities as $entity) {
             $this->assertNull($entity->isValid());
@@ -124,14 +123,12 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         }
 
         // 验证查询不会抛出异常,无论是否找到结果
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertTrue(true, 'findOneBy with null criteria executed without throwing exception');
     }
 
     public function testCountWithNullCriteria(): void
     {
         $count = $this->repository->count(['remark' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($count);
         $this->assertGreaterThanOrEqual(0, $count);
     }
@@ -160,7 +157,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
     public function testFindByWithSyncNullCriteria(): void
     {
         $entities = $this->repository->findBy(['sync' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($entities);
         foreach ($entities as $entity) {
             $this->assertNull($entity->isSync());
@@ -170,7 +166,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
     public function testCountWithSyncNullCriteria(): void
     {
         $count = $this->repository->count(['sync' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($count);
         $this->assertGreaterThanOrEqual(0, $count);
     }
@@ -178,7 +173,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
     public function testCountWithValidNullCriteria(): void
     {
         $count = $this->repository->count(['valid' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($count);
         $this->assertGreaterThanOrEqual(0, $count);
     }
@@ -303,7 +297,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithValueRemark);
 
         $nullRemarkEntities = $this->repository->findBy(['remark' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($nullRemarkEntities);
 
         $foundNullRemarkEntity = false;
@@ -329,7 +322,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithNullSync);
 
         $nullSyncEntities = $this->repository->findBy(['sync' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($nullSyncEntities);
 
         $foundNullSyncEntity = false;
@@ -355,7 +347,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithNullValid);
 
         $nullValidEntities = $this->repository->findBy(['valid' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($nullValidEntities);
 
         $foundNullValidEntity = false;
@@ -382,7 +373,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithNullRemark);
 
         $countBefore = $this->repository->count(['remark' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($countBefore);
         $this->assertGreaterThanOrEqual(1, $countBefore);
 
@@ -413,7 +403,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithNullSync);
 
         $countAfter = $this->repository->count(['sync' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($countAfter);
         $this->assertEquals($countBefore + 1, $countAfter, 'Count should increase by 1 after adding null sync entity');
     }
@@ -432,7 +421,6 @@ final class EnvRepositoryTest extends AbstractRepositoryTestCase
         $this->repository->save($entityWithNullValid);
 
         $countAfter = $this->repository->count(['valid' => null]);
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsInt($countAfter);
         $this->assertEquals($countBefore + 1, $countAfter, 'Count should increase by 1 after adding null valid entity');
     }

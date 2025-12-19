@@ -4,10 +4,13 @@ namespace Tourze\EnvManageBundle\Procedure;
 
 use Tourze\DoctrineHelper\CacheHelper;
 use Tourze\EnvManageBundle\Entity\Env;
+use Tourze\EnvManageBundle\Param\GetEnvConfigParam;
 use Tourze\EnvManageBundle\Service\EnvService;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
 use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Contracts\RpcParamInterface;
+use Tourze\JsonRPC\Core\Result\ArrayResult;
 use Tourze\JsonRPC\Core\Model\JsonRpcRequest;
 use Tourze\JsonRPCCacheBundle\Procedure\CacheableProcedure;
 
@@ -22,11 +25,11 @@ final class GetEnvConfig extends CacheableProcedure
     }
 
     /**
-     * @return array<string, mixed>
+     * @phpstan-param GetEnvConfigParam $param
      */
-    public function execute(): array
+    public function execute(GetEnvConfigParam|RpcParamInterface $param): ArrayResult
     {
-        return ['envs' => $this->envService->fetchPublicArray()];
+        return new ArrayResult(['envs' => $this->envService->fetchPublicArray()]);
     }
 
     public function getCacheKey(JsonRpcRequest $request): string

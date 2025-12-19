@@ -28,8 +28,6 @@ final class EnvServiceTest extends AbstractIntegrationTestCase
     public function testFetchPublicArrayWithNoEnvironmentVariablesReturnsEmptyArray(): void
     {
         $result = $this->envService->fetchPublicArray();
-
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($result);
     }
 

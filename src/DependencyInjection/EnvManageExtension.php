@@ -4,7 +4,7 @@ namespace Tourze\EnvManageBundle\DependencyInjection;
 
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class EnvManageExtension extends AutoExtension
+final class EnvManageExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {

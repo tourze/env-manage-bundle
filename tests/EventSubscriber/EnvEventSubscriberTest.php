@@ -120,8 +120,6 @@ final class EnvEventSubscriberTest extends AbstractEventSubscriberTestCase
 
         $subscriber = $this->createEventSubscriber();
         $result = $subscriber->loadCache($cacheItem);
-
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($result);
         $this->assertArrayHasKey('TEST_CACHE_ENV1', $result);
         $this->assertArrayHasKey('TEST_CACHE_ENV2', $result);

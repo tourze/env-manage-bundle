@@ -5,9 +5,10 @@ namespace Tourze\EnvManageBundle\Tests\Procedure;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\EnvManageBundle\Entity\Env;
+use Tourze\EnvManageBundle\Param\GetEnvConfigParam;
 use Tourze\EnvManageBundle\Procedure\GetEnvConfig;
 use Tourze\JsonRPC\Core\Model\JsonRpcRequest;
-use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
+use Tourze\PHPUnitJsonRPC\AbstractProcedureTestCase;
 
 /**
  * @internal
@@ -46,12 +47,12 @@ final class GetEnvConfigTest extends AbstractProcedureTestCase
         $this->persistAndFlush($env2);
 
         $procedure = $this->createProcedure();
-        $result = $procedure->execute();
+        $result = $procedure->execute(new GetEnvConfigParam());
 
-        /** @phpstan-ignore method.alreadyNarrowedType */
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('envs', $result);
-        $this->assertIsArray($result['envs']);
+        $this->assertInstanceOf(\Tourze\JsonRPC\Core\Result\ArrayResult::class, $result);
+        $resultArray = $result->toArray();
+        $this->assertArrayHasKey('envs', $resultArray);
+        $this->assertIsArray($resultArray['envs']);
     }
 
     public function testGetCacheKeyReturnsExpectedKey(): void

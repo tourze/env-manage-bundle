@@ -30,12 +30,10 @@ final class EnvManageIntegrationTest extends AbstractIntegrationTestCase
     public function testKernelHasRequiredBundles(): void
     {
         $container = self::getContainer();
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertNotNull($container, 'Container should be initialized');
 
         /** @var Kernel $kernel */
         $kernel = $container->get('kernel');
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertNotNull($kernel, 'Kernel should be available in container');
 
         $bundles = $kernel->getBundles();
@@ -48,8 +46,6 @@ final class EnvManageIntegrationTest extends AbstractIntegrationTestCase
     {
         $service = self::getService(EnvService::class);
         $result = $service->fetchPublicArray();
-
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsArray($result);
     }
 

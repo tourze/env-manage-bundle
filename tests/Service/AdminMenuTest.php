@@ -38,7 +38,6 @@ final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
     {
         // 简化测试：仅验证 AdminMenu 实例是可调用的
         // 由于避免使用 Mock，我们重点测试服务的基本功能而非详细的交互
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertIsCallable($this->adminMenu, 'AdminMenu should be callable');
         $this->assertInstanceOf(AdminMenu::class, $this->adminMenu, 'Service should be an instance of AdminMenu');
 
